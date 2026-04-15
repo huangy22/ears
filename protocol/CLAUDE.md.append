@@ -1,0 +1,54 @@
+
+## EARS — Experience And Reasoning System
+
+A three-component system for capturing, distilling, and surfacing knowledge from development work.
+
+### Component 1: Moment Capture (automatic)
+
+A PostToolUse hook (`~/.local/bin/ears-trace`) monitors your work and sends
+`[EARS]` prompts at six transition points:
+
+1. **Session Start**: First tool call of a session — capture task context.
+2. **Error→Fix**: A Bash command fails, then you fix it. The hook prompts *after the fix*.
+3. **Stuck**: You've edited the same file 4+ times recently (thrashing signal).
+4. **Commit Digest**: On `git commit` — includes diff summary for reflection. Fires on every commit (no rate limit).
+5. **Session End**: On `git merge` or wrap-up — includes memory-writing nudge.
+6. **Activity Pulse**: 30+ min of active edits without a commit or trace update — nudges in-flight decision capture.
+
+**When you receive an `[EARS]` prompt, respond to it before continuing.**
+Append to the nearest `trace.md` (walk up from the file you're editing).
+If none exists, create one: `# Trace: <directory-name>`.
+**Always include the `<!-- concepts: ... -->` tag** with 1-3 knowledge areas relevant to the current project.
+
+The hook is state-machine based — it tracks pending errors in `/tmp/ears_*/` and only fires when meaningful transitions occur. All triggers are rate-limited to at most once per 10 minutes (except Commit Digest, which fires on every commit).
+
+**If nothing notable happened, say so in one line.** Don't write boilerplate.
+
+**Session End memory check**: When the Session End prompt fires, it also asks you to check if anything should go into `.claude/memory/`. Don't wait for `/reflect` — write pitfalls, decisions, and patterns immediately if they exist.
+
+### Component 2: Pattern Distillation (on-demand)
+
+Use `/distill <concept>` to extract patterns from trace.md files into reusable knowledge entries. Run after completing batches of work or when entering an area with 3+ trace entries.
+
+### Component 3: Principle Surfacing (human-gated)
+
+When a pattern reaches `[N >= 5, strong]`, it's a candidate for promotion to CLAUDE.md. The agent flags candidates; the human decides.
+
+## Session End Protocol
+
+**Before ending a session**, run `/reflect` to extract lessons learned. If `/reflect` cannot run (abrupt exit, context full), the EARS Session End hook will nudge you to write critical findings to `.claude/memory/` directly.
+
+If the project has no `.claude/memory/` directory, create it:
+```
+.claude/memory/
+  pitfalls.yaml    — things that broke and how to avoid them
+  patterns.yaml    — confirmed multi-step workflows
+  decisions.yaml   — architectural choices with rationale
+```
+
+## Checkpoint / Resume
+
+Use `/checkpoint` before ending long sessions or when context is approaching limits.
+Use `/resume` at the start of a new session to recover state from the last checkpoint.
+
+For full documentation: https://github.com/tianhanz/playground-for-agentic-science
