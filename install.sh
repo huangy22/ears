@@ -63,6 +63,13 @@ chmod +x "$HOME/.local/bin/ears-trace" "$HOME/.local/bin/ears-state"
 dim "ears-trace → ~/.local/bin/ears-trace"
 dim "ears-state → ~/.local/bin/ears-state"
 
+# Install brainstorm script (referenced by skills/brainstorm/SKILL.md via absolute path)
+if [ -f "$REPO_DIR/skills/brainstorm/brainstorm.py" ]; then
+  cp "$REPO_DIR/skills/brainstorm/brainstorm.py" "$HOME/.local/bin/brainstorm.py"
+  chmod +x "$HOME/.local/bin/brainstorm.py"
+  dim "brainstorm.py → ~/.local/bin/brainstorm.py"
+fi
+
 # -------------------------------------------------------------------
 # Step 2: Install skills
 # -------------------------------------------------------------------
