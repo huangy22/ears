@@ -14,7 +14,7 @@ The argument provided is: $ARGUMENTS
 Run the brainstorm script with the provided arguments:
 
 ```bash
-python3 scripts/dev/brainstorm.py $ARGUMENTS
+python3 ~/.local/bin/brainstorm.py $ARGUMENTS
 ```
 
 ### Available roles (--role)
@@ -39,16 +39,16 @@ python3 scripts/dev/brainstorm.py $ARGUMENTS
 
 ```bash
 # Default review of README
-python3 scripts/dev/brainstorm.py README.md
+python3 ~/.local/bin/brainstorm.py README.md
 
 # Brainstorm the roadmap from a scientist's perspective
-python3 scripts/dev/brainstorm.py docs/ROADMAP.md --role scientist --style brainstorm
+python3 ~/.local/bin/brainstorm.py docs/ROADMAP.md --role scientist --style brainstorm
 
 # Red-team critique of the API design
-python3 scripts/dev/brainstorm.py server/routes/challenges.py --role red-team --style critique
+python3 ~/.local/bin/brainstorm.py server/routes/challenges.py --role red-team --style critique
 
 # Debate: argue against the current architecture
-python3 scripts/dev/brainstorm.py CLAUDE.md --role visionary --style debate
+python3 ~/.local/bin/brainstorm.py CLAUDE.md --role visionary --style debate
 ```
 
 ## Step 2 — Present results
@@ -61,9 +61,9 @@ Show the full output from all models. Then synthesize:
 
 ## Step 3 — If the script fails
 
-If `scripts/dev/brainstorm.py` is missing, fall back to running individual reviews:
+If `~/.local/bin/brainstorm.py` is missing, copy it from the canonical source:
 ```bash
-python3 scripts/dev/review_gpt.py <file>
-python3 scripts/dev/review_gemini.py <file>
+cp /Users/dp/Projects/playground-for-agentic-science/scripts/dev/brainstorm.py ~/.local/bin/brainstorm.py
+chmod +x ~/.local/bin/brainstorm.py
 ```
-And manually call Qwen via the predictions API.
+Or fall back to running individual reviews via the sibling scripts in that repo.
