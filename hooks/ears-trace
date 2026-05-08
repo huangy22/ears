@@ -227,6 +227,10 @@ if [ "$TOOL" = "Bash" ]; then
         if [ "$RESOLVED" = "true" ]; then
             rm -f "$REPO_STATE_DIR/pending_error.json"
 
+            # Build short forms used by both the structured decision and the prompt
+            SHORT_ERR=$(echo "$PREV_ERR" | tr '\n' ' ' | head -c 200)
+            SHORT_CMD=$(echo "$PREV_CMD" | head -c 120)
+
             # Write structured decision to session state
             ${EARS_STATE} decision \
                 --type error_fix \
@@ -239,10 +243,6 @@ if [ "$TOOL" = "Bash" ]; then
             if rate_limited "error_fix"; then
                 exit 0
             fi
-
-            # Build a contextual prompt with what actually happened
-            SHORT_ERR=$(echo "$PREV_ERR" | tr '\n' ' ' | head -c 200)
-            SHORT_CMD=$(echo "$PREV_CMD" | head -c 120)
 
             cat >&2 <<MSG
 [EARS] Error→Fix in $CTX_NAME.
